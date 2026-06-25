@@ -1,15 +1,16 @@
 import Link from "next/link";
 
+/* eslint-disable @next/next/no-img-element */
+
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-3" aria-label="ArmanixVerse home">
-      <span className="brand-mark relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-lg border border-white/15 bg-gradient-to-br from-pulse via-ion to-ember shadow-glow">
-        <span className="brand-mark-core absolute inset-1 rounded-md bg-black/35" />
-        <span className="brand-mark-text relative text-lg font-black tracking-tighter text-white">AV</span>
+    <Link href="/" className="flex min-w-0 items-center gap-3" aria-label="ArmanixVerse home">
+      <span className="brand-mark relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/15 bg-black/20 shadow-glow">
+        <img src="/brand/armanixverse-logo-hd.png" alt="" className="h-full w-full object-contain" />
       </span>
       {!compact ? (
-        <span>
-          <span className="block text-sm font-black uppercase tracking-[0.28em]">ArmanixVerse</span>
+        <span className="min-w-0">
+          <img src="/brand/armanixverse-wordmark.png" alt="ArmanixVerse" className="h-auto w-[176px] max-w-[46vw] object-contain sm:w-[220px]" />
           <span className="text-xs text-white/55">The Ultimate Gaming Universe</span>
         </span>
       ) : null}

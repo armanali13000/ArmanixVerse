@@ -11,9 +11,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#FF4FA2",
     icons: [
       {
-        src: "/icon.svg",
-        sizes: "any",
-        type: "image/svg+xml"
+        src: "/brand/armanixverse-logo-hd.png",
+        sizes: "512x512",
+        type: "image/png"
       }
     ]
   };

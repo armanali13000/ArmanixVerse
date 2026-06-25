@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { GoogleIcon } from "@/components/GoogleIcon";
 import { Logo } from "@/components/Logo";
+import { Wordmark } from "@/components/Wordmark";
 import { useAuth } from "@/components/AuthProvider";
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
@@ -17,9 +18,10 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
       <div className="mx-auto max-w-3xl px-4 py-20">
         <div className="glass rounded-lg p-6">
           <Logo />
+          <Wordmark className="mt-6 h-auto w-[280px] max-w-full" />
           <p className="text-xs font-black uppercase tracking-[0.3em] text-ember">Protected Admin</p>
           <h1 className="mt-4 text-4xl font-black">Admin access required</h1>
-          <p className="mt-4 text-white/62">Use your approved admin Google account to manage ArmanixVerse content, products, trailers, and settings.</p>
+          <p className="mt-4 text-white/62">Use your approved admin Google account to manage content, products, trailers, and settings.</p>
           {error ? <p className="mt-4 rounded-md border border-ember/20 bg-ember/10 p-3 text-sm text-ember">{error}</p> : null}
           <div className="mt-6 flex flex-wrap gap-3">
             <button onClick={loginGoogle} className="rounded-full bg-white px-5 py-3 font-bold text-black"><GoogleIcon className="mr-2 inline-block h-5 w-5 align-[-4px]" />Login with Google</button>

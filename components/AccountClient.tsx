@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Bell, Bookmark, Cloud, Gamepad2 } from "lucide-react";
 import { GoogleIcon } from "@/components/GoogleIcon";
 import { Logo } from "@/components/Logo";
+import { Wordmark } from "@/components/Wordmark";
 import { useAuth } from "@/components/AuthProvider";
 
 export function AccountClient() {
@@ -21,7 +22,17 @@ export function AccountClient() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
       <p className="text-xs font-bold uppercase tracking-[0.28em] text-ember">Player Account</p>
-      <h1 className="mt-4 text-4xl font-black">{user ? "Your ArmanixVerse Profile" : "Login To Your Gaming Companion"}</h1>
+      <div className="mt-4">
+        {user ? (
+          <div className="flex flex-wrap items-end gap-3">
+            <span className="text-4xl font-black">Your</span>
+            <Wordmark className="h-auto w-[260px] max-w-full" />
+            <span className="text-4xl font-black">Profile</span>
+          </div>
+        ) : (
+          <h1 className="text-4xl font-black">Login To Your Gaming Companion</h1>
+        )}
+      </div>
       <div className="mt-8 grid gap-5 lg:grid-cols-[.8fr_1.2fr]">
         <div className="glass rounded-lg p-5">
           <Logo />

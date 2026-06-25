@@ -33,10 +33,10 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico" },
-      { url: "/icon.svg", type: "image/svg+xml" }
+      { url: "/brand/armanixverse-logo-hd.png", type: "image/png" }
     ],
-    shortcut: "/icon.svg",
-    apple: "/icon.svg"
+    shortcut: "/brand/armanixverse-logo-hd.png",
+    apple: "/brand/armanixverse-logo-hd.png"
   }
 };
 

@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CinematicPanel } from "@/components/CinematicPanel";
+import { Wordmark } from "@/components/Wordmark";
 import { games } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Games", description: "Expandable ArmanixVerse game ecosystems.", alternates: { canonical: "/games" } };
 
 export default function GamesPage() {
   return (
-    <CinematicPanel eyebrow="Games" title="Every Game Becomes A Universe" body="ArmanixVerse is structured to add future game hubs with guides, maps, databases, communities, and AI assistance.">
+    <CinematicPanel eyebrow="Games" title="Every Game Becomes A Universe" body="This platform is structured to add future game hubs with guides, maps, databases, communities, and AI assistance.">
+      <Wordmark className="mb-6 h-auto w-[280px] max-w-full" />
       <div className="grid gap-4">
         {games.map((game) => (
           <Link key={game.slug} href={`/games/${game.slug}`} className="glass rounded-lg p-5 transition hover:-translate-y-1">
