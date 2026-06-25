@@ -14,7 +14,7 @@ type AuthContextValue = {
   error: string;
   isAdmin: boolean;
   loginGoogle: () => Promise<void>;
-  loginEmail: (email: string, password: string, name?: string) => Promise<void>;
+  loginEmail: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 

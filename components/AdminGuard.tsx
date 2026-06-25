@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { GoogleIcon } from "@/components/GoogleIcon";
 import { Logo } from "@/components/Logo";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -21,7 +22,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
           <p className="mt-4 text-white/62">Use your approved admin Google account to manage ArmanixVerse content, products, trailers, and settings.</p>
           {error ? <p className="mt-4 rounded-md border border-ember/20 bg-ember/10 p-3 text-sm text-ember">{error}</p> : null}
           <div className="mt-6 flex flex-wrap gap-3">
-            <button onClick={loginGoogle} className="rounded-full bg-white px-5 py-3 font-bold text-black"><span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-black text-xs text-white">G</span>Login with Google</button>
+            <button onClick={loginGoogle} className="rounded-full bg-white px-5 py-3 font-bold text-black"><GoogleIcon className="mr-2 inline-block h-5 w-5 align-[-4px]" />Login with Google</button>
             <Link href="/login" className="rounded-full border border-white/15 bg-white/10 px-5 py-3 font-bold">User login</Link>
           </div>
         </div>

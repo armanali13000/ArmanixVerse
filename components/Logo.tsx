@@ -3,9 +3,9 @@ import Link from "next/link";
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <Link href="/" className="flex items-center gap-3" aria-label="ArmanixVerse home">
-      <span className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-lg border border-white/15 bg-gradient-to-br from-pulse via-ion to-ember shadow-glow">
-        <span className="absolute inset-1 rounded-md bg-black/35" />
-        <span className="relative text-lg font-black tracking-tighter text-white">AV</span>
+      <span className="brand-mark relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-lg border border-white/15 bg-gradient-to-br from-pulse via-ion to-ember shadow-glow">
+        <span className="brand-mark-core absolute inset-1 rounded-md bg-black/35" />
+        <span className="brand-mark-text relative text-lg font-black tracking-tighter text-white">AV</span>
       </span>
       {!compact ? (
         <span>

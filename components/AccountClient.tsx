@@ -3,7 +3,8 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from "react";
-import { Bell, Bookmark, Cloud, Gamepad2, UserCircle } from "lucide-react";
+import { Bell, Bookmark, Cloud, Gamepad2 } from "lucide-react";
+import { GoogleIcon } from "@/components/GoogleIcon";
 import { Logo } from "@/components/Logo";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -24,8 +25,7 @@ export function AccountClient() {
       <div className="mt-8 grid gap-5 lg:grid-cols-[.8fr_1.2fr]">
         <div className="glass rounded-lg p-5">
           <Logo />
-          <UserCircle className="mt-6 h-16 w-16 text-pulse" />
-          {user?.photoURL ? <img src={user.photoURL} alt={user.displayName ?? "User avatar"} className="mt-4 h-16 w-16 rounded-full border border-white/15" /> : null}
+          {user?.photoURL ? <img src={user.photoURL} alt={user.displayName ?? "User avatar"} className="mt-6 h-16 w-16 rounded-full border border-white/15" /> : null}
           <p className="mt-4 text-sm text-white/60">
             {user ? `${user.email} - ${role}` : "Login to save guides, bookmark products, track progress, and personalize your gaming dashboard."}
           </p>
@@ -38,7 +38,7 @@ export function AccountClient() {
               <input value={password} type="password" onChange={(event) => setPassword(event.target.value)} className="mt-2 w-full rounded-md border border-white/10 bg-black/30 px-4 py-3 outline-none" />
               <button onClick={() => loginEmail(email, password)} className="mt-4 w-full rounded-md bg-white px-4 py-3 font-bold text-black">Login</button>
               <button onClick={loginGoogle} className="mt-3 w-full rounded-md border border-white/10 bg-white/10 px-4 py-3 font-bold">
-                <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-black text-black">G</span>
+                <GoogleIcon className="mr-2 inline-block h-5 w-5 align-[-4px]" />
                 Continue With Google
               </button>
             </>
