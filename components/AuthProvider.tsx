@@ -24,6 +24,26 @@ function adminEmail() {
   return process.env.NEXT_PUBLIC_ADMIN_EMAIL?.toLowerCase().trim();
 }
 
+function authErrorMessage(error: unknown) {
+  const code = typeof error === "object" && error && "code" in error ? String((error as { code?: string }).code) : "";
+  if (code === "auth/unauthorized-domain") {
+    return "Google login is blocked because this domain is not added in Firebase Authorized domains. Add armanixverse.vercel.app in Firebase Authentication settings.";
+  }
+  if (code === "auth/operation-not-allowed") {
+    return "Google login provider is not enabled in Firebase Authentication.";
+  }
+  if (code === "auth/popup-blocked") {
+    return "The browser blocked the Google login popup. Allow popups for this site and try again.";
+  }
+  if (code === "auth/popup-closed-by-user") {
+    return "Google login was closed before it finished.";
+  }
+  if (code === "auth/invalid-api-key" || code === "auth/api-key-not-valid") {
+    return "Firebase API key is missing or invalid in Vercel environment variables.";
+  }
+  return error instanceof Error ? error.message : "Google login failed. Check Firebase and Vercel settings.";
+}
+
 async function syncRole(user: User): Promise<Role> {
   const email = user.email?.toLowerCase() ?? "";
   const fallbackRole: Role = email && email === adminEmail() ? "admin" : "user";
@@ -83,10 +103,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setError("Firebase environment variables are required for Google login.");
           return;
         }
-        const { auth } = getFirebaseServices();
-        const credential = await signInWithPopup(auth, new GoogleAuthProvider());
-        setUser(credential.user);
-        setRole(await syncRole(credential.user));
+        try {
+          const { auth } = getFirebaseServices();
+          const provider = new GoogleAuthProvider();
+          provider.setCustomParameters({ prompt: "select_account" });
+          const credential = await signInWithPopup(auth, provider);
+          setUser(credential.user);
+          setRole(await syncRole(credential.user));
+        } catch (loginError) {
+          setError(authErrorMessage(loginError));
+        }
       },
       async loginEmail(email, password) {
         setError("");
@@ -100,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(credential.user);
           setRole(await syncRole(credential.user));
         } catch (loginError) {
-          setError(loginError instanceof Error ? loginError.message : "Email login failed.");
+          setError(authErrorMessage(loginError));
         }
       },
       async logout() {
