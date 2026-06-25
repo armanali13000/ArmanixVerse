@@ -24,7 +24,7 @@ export default function HomePage() {
             <HomeHeroCopy />
           </div>
           <div className="glass gradient-border rounded-lg p-5">
-            <div className="rounded-lg border border-white/10 bg-[radial-gradient(circle_at_30%_15%,rgba(139,92,246,.48),transparent_32%),radial-gradient(circle_at_80%_30%,rgba(56,189,248,.28),transparent_30%),linear-gradient(135deg,#181b25,#050508)] p-5">
+            <div className="theme-cinematic rounded-lg border border-white/10 p-5">
               <div className="mb-5 flex items-center justify-between">
                 <span className="rounded-full bg-black/40 px-3 py-1 text-xs uppercase tracking-[0.22em] text-ion">Live countdown</span>
                 <Gamepad2 className="h-5 w-5 text-ember" />

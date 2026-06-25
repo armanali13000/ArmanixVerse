@@ -10,7 +10,7 @@ import {
   updateDoc
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
-import { getFirebaseServices, hasFirebaseConfig } from "@/lib/firebase";
+import { getFirebaseServices, getFirebaseStorageService, hasFirebaseConfig, hasFirebaseStorageConfig } from "@/lib/firebase";
 
 type WithId = { id?: string; createdAt?: string; updatedAt?: string; status?: string };
 
@@ -91,8 +91,8 @@ export async function patchRecord<T extends WithId>(name: string, id: string, pa
 
 export async function uploadMedia(file: File, alt: string) {
   const id = makeId("media");
-  if (hasFirebaseConfig()) {
-    const { storage } = getFirebaseServices();
+  if (hasFirebaseStorageConfig()) {
+    const storage = getFirebaseStorageService();
     const path = `media/${id}-${file.name}`;
     const storageRef = ref(storage, path);
     await uploadBytes(storageRef, file, { customMetadata: { alt } });
@@ -112,8 +112,8 @@ export async function uploadMedia(file: File, alt: string) {
 }
 
 export async function deleteMedia(path: string, id: string) {
-  if (hasFirebaseConfig()) {
-    const { storage } = getFirebaseServices();
+  if (hasFirebaseStorageConfig()) {
+    const storage = getFirebaseStorageService();
     await deleteObject(ref(storage, path));
   }
   await deleteRecord("media", id);

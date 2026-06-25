@@ -17,9 +17,12 @@ export function hasFirebaseConfig() {
     firebaseConfig.apiKey &&
       firebaseConfig.authDomain &&
       firebaseConfig.projectId &&
-      firebaseConfig.storageBucket &&
       firebaseConfig.appId
   );
+}
+
+export function hasFirebaseStorageConfig() {
+  return Boolean(hasFirebaseConfig() && firebaseConfig.storageBucket);
 }
 
 export function getFirebaseApp() {
@@ -31,7 +34,10 @@ export function getFirebaseServices() {
   return {
     app,
     auth: getAuth(app),
-    db: getFirestore(app),
-    storage: getStorage(app)
+    db: getFirestore(app)
   };
+}
+
+export function getFirebaseStorageService() {
+  return getStorage(getFirebaseApp());
 }

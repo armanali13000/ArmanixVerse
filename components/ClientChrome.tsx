@@ -30,6 +30,7 @@ export function ClientChrome({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.classList.toggle("light", !dark);
+    document.body.dataset.theme = dark ? "dark" : "light";
     window.localStorage.setItem("av-theme", dark ? "dark" : "light");
   }, [dark]);
 
@@ -39,22 +40,22 @@ export function ClientChrome({ children }: { children: ReactNode }) {
         x.set(event.clientX - 160);
         y.set(event.clientY - 160);
       }}
-      className="min-h-screen overflow-hidden bg-void text-white"
+      className="min-h-screen overflow-hidden bg-void text-white transition-colors duration-300"
     >
       <motion.div
         aria-hidden
         className="pointer-events-none fixed z-40 h-80 w-80 rounded-full bg-pulse/20 blur-3xl"
         style={{ x: glowX, y: glowY }}
       />
-      <div className="fixed inset-0 -z-10 bg-radial-grid" />
-      <div className="fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,5,8,.4),#050508_75%)]" />
+      <div className="theme-grid fixed inset-0 -z-10 bg-radial-grid" />
+      <div className="theme-fade fixed inset-0 -z-10 bg-[linear-gradient(180deg,rgba(5,5,8,.4),#050508_75%)]" />
       <button
         type="button"
         onClick={() => setDark((value) => !value)}
         className="fixed bottom-5 right-5 z-50 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white backdrop-blur"
         aria-label="Toggle dark mode"
       >
-        {dark ? "Dark" : "Light"}
+        {dark ? "Dark Mode" : "Light Mode"}
       </button>
       <div data-chrome-enter>{children}</div>
       <div className="noise" />

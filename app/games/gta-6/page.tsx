@@ -28,7 +28,7 @@ export default function GtaSixPage() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_10%,rgba(139,92,246,.34),transparent_30%),radial-gradient(circle_at_84%_12%,rgba(251,146,60,.24),transparent_26%),linear-gradient(135deg,#11131a,#050508)]" />
+        <div className="theme-cinematic absolute inset-0 -z-10" />
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[1.1fr_.9fr] lg:px-8">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-ember">Game Ecosystem</p>
@@ -107,7 +107,7 @@ export default function GtaSixPage() {
       <Section eyebrow="Interactive Map" title="Spoiler-Safe Leonida Layers">
         <div className="grid gap-5 lg:grid-cols-[1.2fr_.8fr]">
           <div className="glass min-h-[420px] rounded-lg p-4">
-            <div className="relative h-full min-h-[390px] overflow-hidden rounded-md border border-white/10 bg-[radial-gradient(circle_at_25%_30%,rgba(56,189,248,.26),transparent_20%),radial-gradient(circle_at_70%_65%,rgba(251,146,60,.24),transparent_22%),linear-gradient(135deg,#0a1620,#150b22)]">
+            <div className="theme-cinematic relative h-full min-h-[390px] overflow-hidden rounded-md border border-white/10">
               {mapMarkers.map((marker) => (
                 <span
                   key={marker.id}

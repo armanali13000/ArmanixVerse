@@ -2,8 +2,10 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Save, Trash2, Upload } from "lucide-react";
+import { Logo } from "@/components/Logo";
+import { useAuth } from "@/components/AuthProvider";
 import { deleteRecord, listRecords, saveRecord, uploadMedia } from "@/lib/db";
 import { homepageSettings, productCategories, products, trailers } from "@/lib/content";
 import type { AffiliateClick, HomepageSettings, Product, ProductCategory, TrailerEmbed } from "@/lib/types";
@@ -65,11 +67,25 @@ const emptyTrailer: TrailerEmbed = {
   status: "draft"
 };
 
+const defaultSettings = {
+  id: "global",
+  siteName: "ArmanixVerse",
+  tagline: "The Ultimate Gaming Universe",
+  officialGtaUrl: "https://www.rockstargames.com/VI",
+  footerDisclaimer:
+    "ArmanixVerse is an independent gaming companion platform. It is not affiliated with Rockstar Games, Take-Two Interactive, Sony, Microsoft, Amazon, Flipkart, or any publisher/retailer.",
+  defaultTheme: "dark",
+  status: "published",
+  createdAt: "",
+  updatedAt: ""
+};
+
 function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
 export function AdminConsole() {
+  const { user, logout } = useAuth();
   const [active, setActive] = useState(tabs[0]);
   const [productRows, setProductRows] = useState<Product[]>([]);
   const [categoryRows, setCategoryRows] = useState<ProductCategory[]>([]);
@@ -85,20 +101,23 @@ export function AdminConsole() {
   const [managedCollection, setManagedCollection] = useState(managedCollections[0]);
   const [managedRows, setManagedRows] = useState<Array<Record<string, unknown> & { id?: string }>>([]);
   const [managedJson, setManagedJson] = useState("{\n  \"title\": \"\",\n  \"status\": \"draft\"\n}");
+  const [settings, setSettings] = useState(defaultSettings);
   const [toast, setToast] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     setLoading(true);
-    const [nextProducts, nextCategories, nextTrailers, nextClicks, nextNewsletter, nextMedia, homes] = await Promise.all([
+    try {
+    const [nextProducts, nextCategories, nextTrailers, nextClicks, nextNewsletter, nextMedia, homes, nextSettings] = await Promise.all([
       listRecords<Product>("products", products),
       listRecords<ProductCategory>("productCategories", productCategories),
       listRecords<TrailerEmbed>("trailers", trailers),
       listRecords<AffiliateClick>("affiliateClicks", []),
       listRecords<{ id?: string; email: string; source: string; createdAt: string }>("newsletterSubscribers", []),
       listRecords<{ id: string; url: string; path: string; alt: string }>("media", []),
-      listRecords<HomepageSettings>("homepageSections", [homepageSettings])
+      listRecords<HomepageSettings>("homepageSections", [homepageSettings]),
+      listRecords<typeof defaultSettings>("settings", [defaultSettings])
     ]);
     setProductRows(nextProducts);
     setCategoryRows(nextCategories);
@@ -107,12 +126,16 @@ export function AdminConsole() {
     setNewsletter(nextNewsletter);
     setMedia(nextMedia);
     setHome(homes[0] ?? homepageSettings);
+    setSettings(nextSettings[0] ?? defaultSettings);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Admin data failed to load.");
+    }
     setLoading(false);
-  }
+  }, []);
 
   useEffect(() => {
     void refresh();
-  }, []);
+  }, [refresh]);
 
   useEffect(() => {
     if (active === "Content Collections") {
@@ -167,6 +190,12 @@ export function AdminConsole() {
     await refresh();
   }
 
+  async function persistSettings() {
+    await saveRecord("settings", settings);
+    setToast("Settings saved.");
+    await refresh();
+  }
+
   async function handleUpload(file?: File) {
     if (!file) return;
     const uploaded = await uploadMedia(file, file.name);
@@ -194,6 +223,13 @@ export function AdminConsole() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mb-6 flex flex-col gap-4 rounded-lg border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <Logo />
+        <div className="flex flex-wrap items-center gap-3 text-sm text-white/60">
+          <span>{user?.email}</span>
+          <button onClick={logout} className="rounded-full border border-ember/25 bg-ember/10 px-4 py-2 font-bold text-ember">Logout</button>
+        </div>
+      </div>
       <div className="mb-6 flex flex-wrap gap-2">{tabs.map((tab) => <button key={tab} onClick={() => setActive(tab)} className={`rounded-full px-4 py-2 text-sm font-bold ${active === tab ? "bg-white text-black" : "border border-white/10 bg-white/5 text-white"}`}>{tab}</button>)}</div>
       {toast ? <p className="mb-4 rounded-md border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm text-emerald-200">{toast}</p> : null}
       {error ? <p className="mb-4 rounded-md border border-ember/20 bg-ember/10 p-3 text-sm text-ember">{error}</p> : null}
@@ -267,7 +303,22 @@ export function AdminConsole() {
 
       {active === "Newsletter" ? <div className="glass rounded-lg p-5"><h2 className="font-bold">Subscribers</h2><div className="mt-4 space-y-2 text-sm text-white/65">{newsletter.map((item) => <p key={item.id ?? item.email}>{item.email} • {item.source} • {item.createdAt}</p>)}</div></div> : null}
 
-      {active === "Settings" ? <div className="glass rounded-lg p-5 text-sm leading-6 text-white/65">Collections configured: users, products, productCategories, news, guides, games, gtaDetails, trailers, homepageSections, media, settings, affiliateClicks, newsletterSubscribers.</div> : null}
+      {active === "Settings" ? (
+        <Editor title="Website Settings" onSave={persistSettings}>
+          <Field label="Site Name" value={settings.siteName} onChange={(siteName) => setSettings({ ...settings, siteName })} />
+          <Field label="Tagline" value={settings.tagline} onChange={(tagline) => setSettings({ ...settings, tagline })} />
+          <Field label="Official GTA VI URL" value={settings.officialGtaUrl} onChange={(officialGtaUrl) => setSettings({ ...settings, officialGtaUrl })} />
+          <Field label="Footer Disclaimer" value={settings.footerDisclaimer} onChange={(footerDisclaimer) => setSettings({ ...settings, footerDisclaimer })} textarea />
+          <label className="block text-sm text-white/60">
+            Default Theme
+            <select value={settings.defaultTheme} onChange={(event) => setSettings({ ...settings, defaultTheme: event.target.value })} className="mt-1 w-full rounded-md border border-white/10 bg-black/30 px-4 py-3 text-sm outline-none">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </label>
+          <p className="text-sm leading-6 text-white/55">Collections configured: users, products, productCategories, news, guides, games, gtaDetails, trailers, homepageSections, media, settings, affiliateClicks, newsletterSubscribers.</p>
+        </Editor>
+      ) : null}
     </div>
   );
 }

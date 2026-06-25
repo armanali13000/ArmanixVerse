@@ -1,6 +1,6 @@
 "use client";
 
-import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile, type User } from "firebase/auth";
+import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { getFirebaseServices, hasFirebaseConfig } from "@/lib/firebase";
@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(credential.user);
         setRole(await syncRole(credential.user));
       },
-      async loginEmail(email, password, name) {
+      async loginEmail(email, password) {
         setError("");
         if (!hasFirebaseConfig()) {
           setError("Firebase environment variables are required for email login.");
@@ -99,11 +99,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const credential = await signInWithEmailAndPassword(auth, email, password);
           setUser(credential.user);
           setRole(await syncRole(credential.user));
-        } catch {
-          const credential = await createUserWithEmailAndPassword(auth, email, password);
-          if (name) await updateProfile(credential.user, { displayName: name });
-          setUser(credential.user);
-          setRole(await syncRole(credential.user));
+        } catch (loginError) {
+          setError(loginError instanceof Error ? loginError.message : "Email login failed.");
         }
       },
       async logout() {

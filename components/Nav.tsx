@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Search, Shield, Sparkles, UserCircle } from "lucide-react";
+import { Search, Shield, UserCircle } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 const links = [
   { href: "/", label: "Home" },
@@ -15,17 +16,9 @@ const links = [
 
 export function Nav() {
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-void/72 backdrop-blur-2xl">
+    <header className="theme-nav sticky top-0 z-30 border-b border-white/10 bg-void/72 backdrop-blur-2xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-pulse via-ion to-ember shadow-glow">
-            <Sparkles className="h-5 w-5 text-white" />
-          </span>
-          <span>
-            <span className="block text-sm font-black uppercase tracking-[0.28em]">ArmanixVerse</span>
-            <span className="text-xs text-white/55">The Ultimate Gaming Universe</span>
-          </span>
-        </Link>
+        <Logo />
         <div className="hidden max-w-3xl items-center gap-1 overflow-x-auto lg:flex">
           {links.map((link) => (
             <Link key={link.href} href={link.href} className="rounded-full px-4 py-2 text-sm text-white/70 transition hover:bg-white/10 hover:text-white">

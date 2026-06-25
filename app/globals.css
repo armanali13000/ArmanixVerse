@@ -27,6 +27,9 @@ body {
     #090909;
   background-size: 64px 64px;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  transition:
+    background-color 240ms ease,
+    color 240ms ease;
 }
 
 a {
@@ -70,6 +73,105 @@ a {
   z-index: 60;
   opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.75'/%3E%3C/svg%3E");
+}
+
+.light body {
+  color: #111111;
+  background:
+    linear-gradient(rgba(9, 9, 9, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(9, 9, 9, 0.035) 1px, transparent 1px),
+    #f5f5f5;
+}
+
+.light .bg-void,
+.light .bg-black,
+.light .bg-black\/30,
+.light .bg-black\/35,
+.light .bg-black\/40,
+.light .bg-black\/45,
+.light .bg-black\/50,
+.light .bg-black\/55 {
+  background-color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.light .theme-grid {
+  opacity: 0.38;
+}
+
+.light .theme-fade {
+  background: linear-gradient(180deg, rgba(245, 245, 245, 0.34), #f5f5f5 78%) !important;
+}
+
+.light .glass {
+  border-color: rgba(9, 9, 9, 0.12);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.66));
+  box-shadow: 0 24px 80px rgba(9, 9, 9, 0.12);
+}
+
+.light [class*="text-white"] {
+  color: rgba(9, 9, 9, 0.86) !important;
+}
+
+.light .text-black {
+  color: #090909 !important;
+}
+
+.light input,
+.light textarea,
+.light select {
+  color: #090909;
+  background-color: rgba(255, 255, 255, 0.82) !important;
+  border-color: rgba(9, 9, 9, 0.14) !important;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: rgba(9, 9, 9, 0.48);
+}
+
+.light header,
+.light footer {
+  background-color: rgba(245, 245, 245, 0.78) !important;
+  border-color: rgba(9, 9, 9, 0.12) !important;
+}
+
+.theme-nav {
+  color: #f5f5f5;
+}
+
+.theme-cinematic {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 79, 162, 0.36), transparent 30%),
+    radial-gradient(circle at 80% 26%, rgba(0, 217, 255, 0.24), transparent 28%),
+    radial-gradient(circle at 55% 88%, rgba(255, 123, 50, 0.18), transparent 32%),
+    linear-gradient(135deg, #141414, #090909);
+}
+
+.light .theme-nav {
+  color: #090909;
+}
+
+.light .theme-cinematic {
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 79, 162, 0.2), transparent 30%),
+    radial-gradient(circle at 80% 26%, rgba(0, 217, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 55% 88%, rgba(255, 123, 50, 0.16), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(245, 245, 245, 0.74)) !important;
+  border-color: rgba(9, 9, 9, 0.12) !important;
+}
+
+.light .border-white\/10,
+.light .border-white\/15 {
+  border-color: rgba(9, 9, 9, 0.14) !important;
+}
+
+.light .bg-white\/5,
+.light .bg-white\/10 {
+  background-color: rgba(9, 9, 9, 0.055) !important;
+}
+
+.light .hover\:bg-white\/10:hover {
+  background-color: rgba(9, 9, 9, 0.09) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
