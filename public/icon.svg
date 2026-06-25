@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="ArmanixVerse icon">
+  <rect width="128" height="128" rx="24" fill="#050508"/>
+  <path d="M24 92 56 24h16l32 68H86l-6-14H48l-6 14H24Z" fill="url(#g)"/>
+  <path d="M54 63h20L64 39 54 63Z" fill="#050508"/>
+  <defs>
+    <linearGradient id="g" x1="24" x2="104" y1="24" y2="92">
+      <stop stop-color="#8b5cf6"/>
+      <stop offset=".5" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+</svg>
