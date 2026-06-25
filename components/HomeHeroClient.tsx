@@ -16,7 +16,7 @@ export function HomeHeroCopy() {
 
   return (
     <>
-      <h1 className="text-balance text-5xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl">{settings.heroTitle}</h1>
+      <h1 className="text-balance text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-8xl">{settings.heroTitle}</h1>
       <p className="mt-5 max-w-2xl text-xl leading-8 text-white/68">{settings.heroSubtitle}</p>
       <div className="mt-8 flex flex-wrap gap-3">
         {settings.ctaButtons.map((button) =>

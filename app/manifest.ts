@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "The Ultimate Gaming Universe",
     start_url: "/",
     display: "standalone",
-    background_color: "#050508",
-    theme_color: "#8b5cf6",
+    background_color: "#090909",
+    theme_color: "#FF4FA2",
     icons: [
       {
         src: "/icon.svg",

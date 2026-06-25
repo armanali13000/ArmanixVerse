@@ -36,7 +36,7 @@ export function ProductGridClient({ mode = "all", category }: { mode?: "all" | "
   return (
     <div>
       {mode === "all" ? (
-        <div className="mb-8 grid gap-3 md:grid-cols-[1fr_auto_auto]">
+        <div className="mb-8 grid gap-3 lg:grid-cols-[1fr_auto_auto]">
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search accessories" className="rounded-md border border-white/10 bg-black/30 px-4 py-3 outline-none" />
           <select value={selected} onChange={(event) => setSelected(event.target.value)} className="rounded-md border border-white/10 bg-black/30 px-4 py-3 outline-none">
             <option value="all">All categories</option>

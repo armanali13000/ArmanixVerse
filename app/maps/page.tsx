@@ -7,7 +7,7 @@ export default function MapsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
       <p className="text-xs font-black uppercase tracking-[0.34em] text-ember">Interactive Map</p>
-      <h1 className="mt-4 text-5xl font-black sm:text-7xl">Leonida Layer System</h1>
+      <h1 className="mt-4 text-4xl font-black sm:text-7xl">Leonida Layer System</h1>
       <p className="mt-5 max-w-3xl text-lg leading-8 text-white/65">Admin-editable pins for locations, businesses, collectibles, vehicles, and landmarks. Confirmed items are separated from coming-soon layers.</p>
       <div className="glass relative mt-10 min-h-[620px] overflow-hidden rounded-lg bg-[radial-gradient(circle_at_28%_24%,rgba(0,217,255,.24),transparent_20%),radial-gradient(circle_at_68%_62%,rgba(255,79,162,.28),transparent_24%),linear-gradient(135deg,#10161a,#170f20)]">
         {mapMarkers.map((marker) => (

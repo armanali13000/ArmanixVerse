@@ -230,7 +230,7 @@ export function AdminConsole() {
           <button onClick={logout} className="rounded-full border border-ember/25 bg-ember/10 px-4 py-2 font-bold text-ember">Logout</button>
         </div>
       </div>
-      <div className="mb-6 flex flex-wrap gap-2">{tabs.map((tab) => <button key={tab} onClick={() => setActive(tab)} className={`rounded-full px-4 py-2 text-sm font-bold ${active === tab ? "bg-white text-black" : "border border-white/10 bg-white/5 text-white"}`}>{tab}</button>)}</div>
+      <div className="mb-6 flex gap-2 overflow-x-auto pb-2">{tabs.map((tab) => <button key={tab} onClick={() => setActive(tab)} className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold ${active === tab ? "bg-white text-black" : "border border-white/10 bg-white/5 text-white"}`}>{tab}</button>)}</div>
       {toast ? <p className="mb-4 rounded-md border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm text-emerald-200">{toast}</p> : null}
       {error ? <p className="mb-4 rounded-md border border-ember/20 bg-ember/10 p-3 text-sm text-ember">{error}</p> : null}
       {loading ? <p className="text-white/60">Loading admin data...</p> : null}
@@ -337,7 +337,7 @@ function Toggles({ values, onChange }: { values: Product; onChange: (value: Prod
 }
 
 function AdminRow({ title, detail, onEdit, onDelete }: { title: string; detail: string; onEdit: () => void; onDelete: () => void }) {
-  return <div className="flex items-center justify-between gap-3 rounded-md border border-white/10 bg-white/[0.03] p-3"><div><b>{title}</b><p className="text-sm text-white/50">{detail}</p></div><div className="flex gap-2"><button onClick={onEdit} className="rounded bg-white/10 px-3 py-2 text-sm">Edit</button><button onClick={onDelete} className="rounded bg-ember/10 px-3 py-2 text-sm text-ember"><Trash2 className="h-4 w-4" /></button></div></div>;
+  return <div className="flex flex-col gap-3 rounded-md border border-white/10 bg-white/[0.03] p-3 sm:flex-row sm:items-center sm:justify-between"><div className="min-w-0"><b className="break-words">{title}</b><p className="break-words text-sm text-white/50">{detail}</p></div><div className="flex shrink-0 gap-2"><button onClick={onEdit} className="rounded bg-white/10 px-3 py-2 text-sm">Edit</button><button onClick={onDelete} className="rounded bg-ember/10 px-3 py-2 text-sm text-ember"><Trash2 className="h-4 w-4" /></button></div></div>;
 }
 
 function List<T extends { id?: string } & Record<string, unknown>>({ rows, titleKey, detail, onEdit, collection, refresh }: { rows: T[]; titleKey: keyof T; detail: (item: T) => string; onEdit: (item: T) => void; collection: string; refresh: () => Promise<void> }) {

@@ -16,7 +16,7 @@ export default function HomePage() {
     <>
       <section className="relative overflow-hidden">
         <HeroField />
-        <div className="mx-auto grid min-h-[calc(100vh-74px)] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.08fr_.92fr] lg:px-8">
+        <div className="mx-auto grid min-h-[calc(100vh-74px)] max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.08fr_.92fr] lg:px-8">
           <div>
             <p className="mb-5 inline-flex rounded-full border border-ember/25 bg-ember/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.25em] text-ember">
               Premium Gaming Companion
@@ -26,7 +26,7 @@ export default function HomePage() {
           <div className="glass gradient-border rounded-lg p-5">
             <div className="theme-cinematic rounded-lg border border-white/10 p-5">
               <div className="mb-5 flex items-center justify-between">
-                <span className="rounded-full bg-black/40 px-3 py-1 text-xs uppercase tracking-[0.22em] text-ion">Live countdown</span>
+                <span className="rounded-full bg-black/40 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-ion sm:text-xs sm:tracking-[0.22em]">Live countdown</span>
                 <Gamepad2 className="h-5 w-5 text-ember" />
               </div>
               <h2 className="mb-5 text-2xl font-black">{game.shortTitle} Launch Window</h2>

@@ -14,15 +14,21 @@ function getParts(target: string) {
 }
 
 export function Countdown({ target }: { target: string }) {
-  const [parts, setParts] = useState(() => getParts(target));
+  const [parts, setParts] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
 
   useEffect(() => {
+    setParts(getParts(target));
     const timer = window.setInterval(() => setParts(getParts(target)), 1000);
     return () => window.clearInterval(timer);
   }, [target]);
 
   return (
-    <div className="grid grid-cols-4 gap-2">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
       {Object.entries(parts).map(([label, value]) => (
         <div key={label} className="rounded-lg border border-white/10 bg-black/35 p-3 text-center">
           <div className="text-2xl font-black text-white sm:text-4xl">{value.toString().padStart(2, "0")}</div>
