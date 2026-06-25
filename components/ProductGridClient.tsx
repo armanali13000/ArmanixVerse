@@ -12,19 +12,40 @@ export function ProductGridClient({ mode = "all", category }: { mode?: "all" | "
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(category ?? "all");
   const [sort, setSort] = useState("latest");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    void Promise.all([listRecords<Product>("products", products), listRecords<ProductCategory>("productCategories", productCategories)]).then(([nextProducts, nextCategories]) => {
-      setRows(nextProducts.filter((item) => item.active && item.status === "published"));
-      setCategories(nextCategories.filter((item) => item.active));
-    });
+    async function loadProducts() {
+      setLoading(true);
+      setError("");
+      try {
+        const [nextProducts, nextCategories] = await Promise.all([
+          listRecords<Product>("products", products),
+          listRecords<ProductCategory>("productCategories", productCategories)
+        ]);
+        setRows(
+          nextProducts.filter((item) => {
+            const active = item.active !== false;
+            const visibleStatus = !item.status || item.status === "published" || item.status === "draft";
+            return active && visibleStatus;
+          })
+        );
+        setCategories(nextCategories.filter((item) => item.active !== false));
+      } catch (loadError) {
+        setError(loadError instanceof Error ? loadError.message : "Products failed to load.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    void loadProducts();
   }, []);
 
   const filtered = useMemo(() => {
     let next = rows.filter((item) => {
       if (mode === "featured" && !item.featured) return false;
       if (mode === "trending" && !item.trending) return false;
-      if (selected !== "all" && item.category.toLowerCase().replace(/\s+/g, "-") !== selected) return false;
+      if (selected !== "all" && item.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") !== selected) return false;
       return `${item.title} ${item.category} ${item.brand}`.toLowerCase().includes(query.toLowerCase());
     });
     if (mode === "featured" && next.length === 0) {
@@ -52,6 +73,8 @@ export function ProductGridClient({ mode = "all", category }: { mode?: "all" | "
           </select>
         </div>
       ) : null}
+      {mode === "all" ? <p className="mb-4 text-sm text-white/55">{loading ? "Loading store products..." : `${filtered.length} product${filtered.length === 1 ? "" : "s"} in store`}</p> : null}
+      {error ? <p className="mb-4 rounded-md border border-ember/20 bg-ember/10 p-3 text-sm text-ember">{error}</p> : null}
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{filtered.map((product) => <ProductCard key={product.id ?? product.slug} product={product} />)}</div>
       {!filtered.length ? <p className="text-white/60">No active products match this view.</p> : null}
     </div>

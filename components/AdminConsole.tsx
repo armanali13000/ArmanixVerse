@@ -278,7 +278,7 @@ export function AdminConsole() {
           </Editor>
           <div className="glass rounded-lg p-5">
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search products" className="mb-4 w-full rounded-md border border-white/10 bg-black/30 px-4 py-3 outline-none" />
-            <div className="space-y-3">{filteredProducts.map((item) => <AdminRow key={item.id ?? item.slug} title={item.title} detail={`${item.category} • ${item.storeName} • ${item.status}${item.featured ? " • homepage" : ""}`} onEdit={() => setProduct(item)} onPublish={item.id ? async () => { await patchRecord<Product>("products", item.id!, { status: "published", active: true, featured: true }); await refresh(); setToast("Product published and added to homepage."); } : undefined} onDelete={async () => window.confirm("Delete this product?") && item.id && (await deleteRecord("products", item.id), await refresh())} />)}</div>
+            <div className="space-y-3">{filteredProducts.map((item) => <AdminRow key={item.id ?? item.slug} title={item.title} detail={`${item.category} • ${item.storeName} • ${item.status ?? "published"} • ${item.active === false ? "hidden from store" : "store"}${item.featured ? " • homepage" : ""}`} onEdit={() => setProduct(item)} onPublish={item.id ? async () => { await patchRecord<Product>("products", item.id!, { status: "published", active: true, featured: true }); await refresh(); setToast("Product published and added to homepage."); } : undefined} onDelete={async () => window.confirm("Delete this product?") && item.id && (await deleteRecord("products", item.id), await refresh())} />)}</div>
           </div>
         </div>
       ) : null}
