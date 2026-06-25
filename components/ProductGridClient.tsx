@@ -27,6 +27,9 @@ export function ProductGridClient({ mode = "all", category }: { mode?: "all" | "
       if (selected !== "all" && item.category.toLowerCase().replace(/\s+/g, "-") !== selected) return false;
       return `${item.title} ${item.category} ${item.brand}`.toLowerCase().includes(query.toLowerCase());
     });
+    if (mode === "featured" && next.length === 0) {
+      next = rows.filter((item) => `${item.title} ${item.category} ${item.brand}`.toLowerCase().includes(query.toLowerCase()));
+    }
     if (sort === "rating") next = next.sort((a, b) => b.rating - a.rating);
     if (sort === "price") next = next.sort((a, b) => Number(a.price.replace(/[^0-9.]/g, "")) - Number(b.price.replace(/[^0-9.]/g, "")));
     if (sort === "latest") next = next.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Save, Trash2, Upload } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useAuth } from "@/components/AuthProvider";
-import { deleteRecord, listRecords, saveRecord, uploadMedia } from "@/lib/db";
+import { deleteRecord, listRecords, patchRecord, saveRecord, uploadMedia } from "@/lib/db";
 import { homepageSettings, productCategories, products, trailers } from "@/lib/content";
 import type { AffiliateClick, HomepageSettings, Product, ProductCategory, TrailerEmbed } from "@/lib/types";
 
@@ -28,7 +28,7 @@ const emptyProduct: Product = {
   discountPercentage: 0,
   rating: 0,
   storeName: "",
-  featured: false,
+  featured: true,
   trending: false,
   bestSeller: false,
   active: true,
@@ -37,7 +37,7 @@ const emptyProduct: Product = {
   buttonText: "Buy Now",
   createdAt: "",
   updatedAt: "",
-  status: "draft",
+  status: "published",
   seoTitle: "",
   seoDescription: ""
 };
@@ -154,7 +154,12 @@ export function AdminConsole() {
       setError("Product name, category, price, and affiliate link are required.");
       return;
     }
-    await saveRecord<Product>("products", { ...product, slug: product.slug || slugify(product.title) });
+    await saveRecord<Product>("products", {
+      ...product,
+      slug: product.slug || slugify(product.title),
+      status: product.status || "published",
+      active: product.active !== false
+    });
     setProduct(emptyProduct);
     setToast("Product saved.");
     await refresh();
@@ -261,11 +266,19 @@ export function AdminConsole() {
             <Field label="Button Text" value={product.buttonText} onChange={(buttonText) => setProduct({ ...product, buttonText })} />
             <Field label="SEO Title" value={product.seoTitle} onChange={(seoTitle) => setProduct({ ...product, seoTitle })} />
             <Field label="SEO Description" value={product.seoDescription} onChange={(seoDescription) => setProduct({ ...product, seoDescription })} textarea />
+            <label className="block text-sm text-white/60">
+              Publish Status
+              <select value={product.status} onChange={(event) => setProduct({ ...product, status: event.target.value as Product["status"] })} className="mt-1 w-full rounded-md border border-white/10 bg-black/30 px-4 py-3 text-sm outline-none">
+                <option value="published">Published - visible in shop</option>
+                <option value="draft">Draft - hidden</option>
+                <option value="inactive">Inactive - hidden</option>
+              </select>
+            </label>
             <Toggles values={product} onChange={setProduct} />
           </Editor>
           <div className="glass rounded-lg p-5">
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search products" className="mb-4 w-full rounded-md border border-white/10 bg-black/30 px-4 py-3 outline-none" />
-            <div className="space-y-3">{filteredProducts.map((item) => <AdminRow key={item.id ?? item.slug} title={item.title} detail={`${item.category} • ${item.storeName} • ${item.status}`} onEdit={() => setProduct(item)} onDelete={async () => window.confirm("Delete this product?") && item.id && (await deleteRecord("products", item.id), await refresh())} />)}</div>
+            <div className="space-y-3">{filteredProducts.map((item) => <AdminRow key={item.id ?? item.slug} title={item.title} detail={`${item.category} • ${item.storeName} • ${item.status}${item.featured ? " • homepage" : ""}`} onEdit={() => setProduct(item)} onPublish={item.id ? async () => { await patchRecord<Product>("products", item.id!, { status: "published", active: true, featured: true }); await refresh(); setToast("Product published and added to homepage."); } : undefined} onDelete={async () => window.confirm("Delete this product?") && item.id && (await deleteRecord("products", item.id), await refresh())} />)}</div>
           </div>
         </div>
       ) : null}
@@ -333,11 +346,17 @@ function Field({ label, value, onChange, textarea }: { label: string; value: str
 }
 
 function Toggles({ values, onChange }: { values: Product; onChange: (value: Product) => void }) {
-  return <div className="grid grid-cols-2 gap-2 text-sm">{(["featured", "trending", "bestSeller", "active"] as const).map((key) => <label key={key} className="flex gap-2"><input type="checkbox" checked={Boolean(values[key])} onChange={(event) => onChange({ ...values, [key]: event.target.checked })} /> {key}</label>)}</div>;
+  const labels: Record<"featured" | "trending" | "bestSeller" | "active", string> = {
+    featured: "Show on homepage",
+    trending: "Trending product",
+    bestSeller: "Best seller",
+    active: "Active in shop"
+  };
+  return <div className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">{(["featured", "trending", "bestSeller", "active"] as const).map((key) => <label key={key} className="flex gap-2"><input type="checkbox" checked={Boolean(values[key])} onChange={(event) => onChange({ ...values, [key]: event.target.checked })} /> {labels[key]}</label>)}</div>;
 }
 
-function AdminRow({ title, detail, onEdit, onDelete }: { title: string; detail: string; onEdit: () => void; onDelete: () => void }) {
-  return <div className="flex flex-col gap-3 rounded-md border border-white/10 bg-white/[0.03] p-3 sm:flex-row sm:items-center sm:justify-between"><div className="min-w-0"><b className="break-words">{title}</b><p className="break-words text-sm text-white/50">{detail}</p></div><div className="flex shrink-0 gap-2"><button onClick={onEdit} className="rounded bg-white/10 px-3 py-2 text-sm">Edit</button><button onClick={onDelete} className="rounded bg-ember/10 px-3 py-2 text-sm text-ember"><Trash2 className="h-4 w-4" /></button></div></div>;
+function AdminRow({ title, detail, onEdit, onDelete, onPublish }: { title: string; detail: string; onEdit: () => void; onDelete: () => void; onPublish?: () => void }) {
+  return <div className="flex flex-col gap-3 rounded-md border border-white/10 bg-white/[0.03] p-3 sm:flex-row sm:items-center sm:justify-between"><div className="min-w-0"><b className="break-words">{title}</b><p className="break-words text-sm text-white/50">{detail}</p></div><div className="flex shrink-0 flex-wrap gap-2">{onPublish ? <button onClick={onPublish} className="rounded bg-emerald-400/10 px-3 py-2 text-sm text-emerald-200">Publish</button> : null}<button onClick={onEdit} className="rounded bg-white/10 px-3 py-2 text-sm">Edit</button><button onClick={onDelete} className="rounded bg-ember/10 px-3 py-2 text-sm text-ember"><Trash2 className="h-4 w-4" /></button></div></div>;
 }
 
 function List<T extends { id?: string } & Record<string, unknown>>({ rows, titleKey, detail, onEdit, collection, refresh }: { rows: T[]; titleKey: keyof T; detail: (item: T) => string; onEdit: (item: T) => void; collection: string; refresh: () => Promise<void> }) {
